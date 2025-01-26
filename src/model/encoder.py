@@ -26,6 +26,7 @@ class Encoder(nn.Module):
         src = F.dropout(src_embedding, p=self.dropout, training=self.training)
         src_lens, sort_index = src_lens.sort(descending=True)
         src = src.index_select(dim=0, index=sort_index)
+        src_lens = src_lens.cpu()
         packed_src = pack_padded_sequence(src, src_lens, batch_first=True)
         packed_output, final_states = self.rnn(packed_src)
         # output, _ = pad_packed_sequence(packed_output, batch_first=True)
